@@ -1,0 +1,23 @@
+{
+  "name": "h4_poker_game_client",
+  "version": "1.0.0",
+  "description": "H4 exam poker game client app made in flutter",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThomasDan/h4_poker_game_client.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThomasDan/h4_poker_game_client/issues"
+  },
+  "homepage": "https://github.com/ThomasDan/h4_poker_game_client#readme"
+}
