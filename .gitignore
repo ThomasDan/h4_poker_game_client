@@ -31,8 +31,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 # /build/
-# /build/app/
-/build/web/
+/build/app/
+# /build/web/
 /build/kotlin/
 /build/cloud_firestore/
 /build/firebase_core/
