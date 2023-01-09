@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Auto Deploy Test 1',
+      title: 'Firebase Auto Deploy Test 2',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: '???'),
+      home: const MyHomePage(title: 'Firebase Auto Deploy Test 2'),
     );
   }
 }
