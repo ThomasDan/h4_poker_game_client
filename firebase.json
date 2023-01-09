@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "build/web",
+    "public": "build/app/outputs/flutter-apk/app-release.apk",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">291910681077-63860205lckg5jrltr670p53qqdgmhiv.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">291910681077</string>
+    <string name="google_api_key" translatable="false">AIzaSyC1iAcH141ThRn7whdR8EeKB0NdbGd7KJ8</string>
+    <string name="google_app_id" translatable="false">1:291910681077:android:8fee90369b57075fbce0bc</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyC1iAcH141ThRn7whdR8EeKB0NdbGd7KJ8</string>
+    <string name="google_storage_bucket" translatable="false">h4-poker-game-client.appspot.com</string>
+    <string name="project_id" translatable="false">h4-poker-game-client</string>
+</resources>
