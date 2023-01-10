@@ -13,13 +13,14 @@ class WebSocketService extends StatefulWidget {
 }
 
 class _WebSocketServiceState extends State<WebSocketService> {
+  // https://us-central1-pokergameengine-firebase.cloudfunctions.net/helloWorld
+  var channel = IOWebSocketChannel.connect(Uri.parse('ws://localhost:8080'));
   List<String> messages = [
     'Test 1: This is not from WS',
     'Test 2: This is not from WS'
   ];
 
   Future listen() async {
-    var channel = IOWebSocketChannel.connect(Uri.parse('ws://localhost:8080'));
     channel.sink.add('Hello?');
     channel.stream.listen((message) {
       channel.sink.add('Received!');
@@ -42,17 +43,24 @@ class _WebSocketServiceState extends State<WebSocketService> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: SizedBox(
-            child: Text(messages[index]),
-            height: 50,
-            width: 150,
-          ),
-        );
+    return StreamBuilder(
+      stream: channel.stream,
+      builder: (context, snapshot) {
+        return Text(snapshot.hasData ? '${snapshot.data}' : '');
       },
-      itemCount: messages.length,
     );
+
+    //return ListView.builder(
+    //  itemBuilder: (context, index) {
+    //    return ListTile(
+    //      leading: SizedBox(
+    //        child: Text(messages[index]),
+    //        height: 50,
+    //        width: 150,
+    //      ),
+    //    );
+    //  },
+    //  itemCount: messages.length,
+    //);
   }
 }
