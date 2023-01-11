@@ -13,17 +13,19 @@ class WebSocketService extends StatefulWidget {
 }
 
 class _WebSocketServiceState extends State<WebSocketService> {
-  // jacob WS test:  https://us-central1-pokergameengine-firebase.cloudfunctions.net/helloWorld
-  var channel = IOWebSocketChannel.connect(Uri.parse('ws://localhost:8080'));
+  
+  var channel = IOWebSocketChannel.connect(Uri.parse('ws://10.108.169.89:8080'));
+
+  int hellosSent = 0;
+  bool connectionMade = false;
+
   List<String> messages = [
-    'Test 1: This is not from WS',
-    'Test 2: This is not from WS'
   ];
 
   Future listen() async {
-    channel.sink.add('Hello?');
+    channel.sink.add('{"message":"Hello?"}');
     channel.stream.listen((message) {
-      channel.sink.add('Received!');
+      //channel.sink.add('Received!');
       //channel.sink.close(status.goingAway);
       setState(() {
         messages.add(message);
@@ -55,8 +57,14 @@ class _WebSocketServiceState extends State<WebSocketService> {
 
   @override
   Widget build(BuildContext context) {
-    listen();
-    channel.sink.add('HELLO?');
+    if(!connectionMade){
+      listen();
+      connectionMade = true;
+    }
+    if(hellosSent < 3){
+      hellosSent++;
+      channel.sink.add('{"message":"HELLO? x${hellosSent}"}');
+    }
     return Text(messages.join('\n'));
 
     /*StreamBuilder(

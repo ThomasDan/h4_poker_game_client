@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\thom09r7\\Desktop\\Flutter\\h4_poker_game_client\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+            "outputFile": "C:\\Users\\thom09r7\\Desktop\\FLutter\\h4_poker_game_client\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
             "map": [
                 {
                     "source": "C:\\Users\\thom09r7\\.gradle\\caches\\transforms-3\\19fea4fb28dedd992824e13cc158e7a1\\transformed\\jetified-play-services-base-18.0.1\\res\\values\\values.xml",
@@ -37,6 +37,23 @@
                         "startOffsets": "6042,7220",
                         "endColumns": "67,166",
                         "endOffsets": "6105,7382"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\thom09r7\\Desktop\\FLutter\\h4_poker_game_client\\build\\app\\generated\\res\\google-services\\debug\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "55,199,281,385,494,614,718",
+                        "endColumns": "143,81,103,108,119,103,80",
+                        "endOffsets": "194,276,380,489,609,713,794"
+                    },
+                    "to": {
+                        "startLines": "119,120,121,122,123,124,125",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "8513,8657,8739,8843,8952,9072,9176",
+                        "endColumns": "143,81,103,108,119,103,80",
+                        "endOffsets": "8652,8734,8838,8947,9067,9171,9252"
                     }
                 },
                 {
@@ -78,24 +95,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\thom09r7\\Desktop\\Flutter\\h4_poker_game_client\\build\\app\\generated\\res\\google-services\\debug\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "55,199,281,385,494,614,718",
-                        "endColumns": "143,81,103,108,119,103,80",
-                        "endOffsets": "194,276,380,489,609,713,794"
-                    },
-                    "to": {
-                        "startLines": "119,120,121,122,123,124,125",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "8513,8657,8739,8843,8952,9072,9176",
-                        "endColumns": "143,81,103,108,119,103,80",
-                        "endOffsets": "8652,8734,8838,8947,9067,9171,9252"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\thom09r7\\Desktop\\Flutter\\h4_poker_game_client\\android\\app\\src\\main\\res\\values\\styles.xml",
+                    "source": "C:\\Users\\thom09r7\\Desktop\\FLutter\\h4_poker_game_client\\android\\app\\src\\main\\res\\values\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
