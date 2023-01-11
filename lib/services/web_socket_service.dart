@@ -19,7 +19,7 @@ class _WebSocketServiceState extends State<WebSocketService> {
   int hellosSent = 0;
   bool connectionMade = false;
 
-  List<String> messages = [
+  List<String> messages = [ 'proof'
   ];
 
   Future listen() async {

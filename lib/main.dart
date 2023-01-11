@@ -20,8 +20,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const String _title = 'Albert Saves The Poker Tournament: GOTY Edition';
     return MaterialApp(
-      title: 'Firebase Auto Deploy Test 2',
+      title: _title,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Firebase Auto Deploy Test 2'),
+      home: const MyHomePage(title: _title),
     );
   }
 }
