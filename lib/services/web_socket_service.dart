@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -13,18 +15,23 @@ class WebSocketService extends StatefulWidget {
 }
 
 class _WebSocketServiceState extends State<WebSocketService> {
-  
-  var channel = IOWebSocketChannel.connect(Uri.parse('ws://10.108.169.89:8080'));
+  // ZBC wifi | Min: 10.108.169.89 | Jacob: 10.108.137.174
+  // SKP-IT wifi | Min: 172.18.100.126 | Jacob: 172.18.100.167
+  IOWebSocketChannel channel =
+      IOWebSocketChannel.connect(Uri.parse('ws://172.18.100.167:8080'));
 
-  int hellosSent = 0;
-  bool connectionMade = false;
+  bool listening = false;
 
-  List<String> messages = [ 'proof'
-  ];
+  List<String> messages = [];
 
   Future listen() async {
-    channel.sink.add('{"message":"Hello?"}');
+    channel.sink.add('{"type":"createGame","gameName":"Chad Monkey #69"}');
     channel.stream.listen((message) {
+      Map<String, dynamic> messageMapped = jsonDecode(message);
+      if (messageMapped.containsKey('gameId')) {
+        channel.sink
+            .add('{"type":"startGame","gameId":"${messageMapped['gameId']}"}');
+      }
       //channel.sink.add('Received!');
       //channel.sink.close(status.goingAway);
       setState(() {
@@ -33,71 +40,12 @@ class _WebSocketServiceState extends State<WebSocketService> {
     });
   }
 
-  // https://www.youtube.com/watch?v=lkpPg0ieklg (streambuilder)
-  /*
-  Stream<String> receiveMessage() async* {
-    channel.stream.listen((message) {
-      channel.sink.add('Received!');
-      setState(() {
-        messages.add(message);
-      });
-    });
-  }
-  */
-
-  // https://www.flutterbeads.com/call-method-after-build-in-flutter/
-  //@override
-  //void initState() {
-  // this initState() is called right after the Widget is done building.
-  //  super.initState();
-  //  WidgetsBinding.instance?.addPostFrameCallback((_) {
-  //    listen();
-  //  });
-  //}
-
   @override
   Widget build(BuildContext context) {
-    if(!connectionMade){
+    if (!listening) {
       listen();
-      connectionMade = true;
-    }
-    if(hellosSent < 3){
-      hellosSent++;
-      channel.sink.add('{"message":"HELLO? x${hellosSent}"}');
+      listening = true;
     }
     return Text(messages.join('\n'));
-
-    /*StreamBuilder(
-      stream: channel.stream,
-      builder: (context, snapshot) {
-        String result;
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          result = 'Waiting for connection..';
-        } else if (snapshot.hasData) {
-          result = snapshot.data;
-        } else if (snapshot.hasError) {
-          result = 'Error: ${snapshot.error.toString()}';
-        } else {
-          result = '???';
-        }
-        return Text(result);
-      },
-    );
-    */
-
-    /*
-    //return ListView.builder(
-    //  itemBuilder: (context, index) {
-    //    return ListTile(
-    //      leading: SizedBox(
-    //        child: Text(messages[index]),
-    //        height: 50,
-    //        width: 150,
-    //      ),
-    //    );
-    //  },
-    //  itemCount: messages.length,
-    //);
-    */
   }
 }
