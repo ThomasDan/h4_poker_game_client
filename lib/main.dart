@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
-import 'services/web_socket_service.dart';
+import 'widgets/game.dart';
 import 'widgets/initial_name_dialog_box.dart';
 
 // We changed void main() into Future main(), in order to make it async for non-local components that may not respond instantly.
@@ -15,8 +15,6 @@ Future main() async {
 
   runApp(const MyApp());
 }
-
-String? name;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -45,6 +43,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  InitialNameDialogBox initNameDialog = InitialNameDialogBox();
+  String name = '';
+
+  void setName(String _name) {
+    setState(() {
+      name = _name;
+    });
+  }
+
+  Widget noNameNoGame() {
+    return name == '' ? const Text('Awaiting name...') : Game(name);
+  }
+
+  @override
+  // initState()
+  void initState() {
+    // https://www.flutterbeads.com/call-method-after-build-in-flutter/
+    super.initState();
+    // the .addPostFrameCallback is called after the very last frame of the app has been drawn during build()
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (name == '') {
+        initNameDialog.getName(setName, context);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,9 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            WebSocketService(),
-          ],
+          children: <Widget>[noNameNoGame()],
         ),
       ),
     );

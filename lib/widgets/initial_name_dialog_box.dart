@@ -3,34 +3,42 @@ import 'package:flutter/material.dart';
 
 class InitialNameDialogBox {
   //extends StatelessWidget
-  final Function setName;
+  //final Function setName;
 
-  InitialNameDialogBox(this.setName); //, {super.key}
+  InitialNameDialogBox(); //this.setName, {super.key}
 
-  String GetName(BuildContext context) {
+  void getName(Function setName, BuildContext context) {
     String _result = '';
     showDialog(
       context: context,
       builder: (context) => Dialog(
         child: Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(6),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Enter your name:'),
+              const Text('Enter your name:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(
-                height: 50,
+                height: 10,
               ),
               TextField(
                 onChanged: (value) => _result = value,
+                style: const TextStyle(fontSize: 16),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
+                  if (_result == '') {
+                    return;
+                  }
                   setName(_result);
                   Navigator.pop(context);
                 },
-                child: Text('Connect'),
+                child: const Text(
+                  'Connect',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
             ],
           ),
@@ -38,8 +46,6 @@ class InitialNameDialogBox {
       ),
       barrierDismissible: false,
     );
-
-    return _result;
   }
 
   /*

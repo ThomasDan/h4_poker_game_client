@@ -15,7 +15,6 @@ class WebSocketService extends StatefulWidget {
 }
 
 class _WebSocketServiceState extends State<WebSocketService> {
-  // ZBC wifi | Min: 10.108.169.89 | Jacob: 10.108.137.174
   // SKP-IT wifi | Min: 172.18.100.126 | Jacob: 172.18.100.167
   IOWebSocketChannel channel =
       IOWebSocketChannel.connect(Uri.parse('ws://172.18.100.167:8080'));
@@ -25,7 +24,7 @@ class _WebSocketServiceState extends State<WebSocketService> {
   List<String> messages = [];
 
   Future listen() async {
-    channel.sink.add('{"type":"createGame","gameName":"Chad Monkey #69"}');
+    channel.sink.add('{"type":"createGame","gameName":"Chad Monkey #420"}');
     channel.stream.listen((message) {
       Map<String, dynamic> messageMapped = jsonDecode(message);
       if (messageMapped.containsKey('gameId')) {
