@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class InitialNameDialogBox {
-  //extends StatelessWidget
-  //final Function setName;
-
-  InitialNameDialogBox(); //this.setName, {super.key}
+  InitialNameDialogBox();
 
   void getName(Function setName, BuildContext context) {
     String _result = '';
     showDialog(
+      // You cannot click outside of this dialog to make it go away, thanks to "barrierDismissible:false"
+      barrierDismissible: false,
       context: context,
       builder: (context) => Dialog(
         child: Padding(
@@ -18,8 +17,10 @@ class InitialNameDialogBox {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Enter your name:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text(
+                'Enter your name:',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -29,6 +30,7 @@ class InitialNameDialogBox {
               ),
               ElevatedButton(
                 onPressed: () {
+                  // The conditional "return;" here will break the "onPressed:" anonymous function
                   if (_result == '') {
                     return;
                   }
@@ -44,18 +46,6 @@ class InitialNameDialogBox {
           ),
         ),
       ),
-      barrierDismissible: false,
     );
   }
-
-  /*
-  @override
-  Widget build(BuildContext context) {
-    // https://api.flutter.dev/flutter/material/Dialog-class.html
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      showDialog<String>(
-          context: context, builder: (BuildContext context) => {})
-    ]);
-  }
-  */
 }

@@ -24,7 +24,7 @@ class _WebSocketServiceState extends State<WebSocketService> {
   List<String> messages = [];
 
   Future listen() async {
-    channel.sink.add('{"type":"createGame","gameName":"Chad Monkey #420"}');
+    channel.sink.add('{"type":"createGame","gameName":"Chad Monkey #1337"}');
     channel.stream.listen((message) {
       Map<String, dynamic> messageMapped = jsonDecode(message);
       if (messageMapped.containsKey('gameId')) {

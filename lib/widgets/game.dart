@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:h4_poker_game_client/models/player.dart';
 import 'package:h4_poker_game_client/services/web_socket_service.dart';
+import 'package:h4_poker_game_client/widgets/communication_manager.dart';
 
 class Game extends StatefulWidget {
   Player? player;
-  Game(String name) {
-    this.player = Player(name);
+
+  Game(String name, {super.key}) {
+    player = Player(name);
   }
 
   @override
@@ -15,8 +17,11 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(children: [WebSocketService()]),
+    return Column(
+      children: [
+        CommunicationManager(),
+        Table(),
+      ],
     );
   }
 }
