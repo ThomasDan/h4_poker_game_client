@@ -1,9 +1,10 @@
-import 'card.dart';
+import 'playing_card.dart';
 
 class Player {
   String name;
+  String? id;
   int bananas = 0;
-  List<Card> hand = [];
+  List<PlayingCard> hand = [];
 
   Player(this.name);
 }

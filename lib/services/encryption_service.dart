@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 import "package:pointycastle/export.dart";
@@ -14,25 +16,48 @@ class EncryptionService {
   // Not required, but kept for testing purposes
   late RSAPublicKey theirPublicKey;
 
-  String? aesKey;
+  late SecureRandom random;
+
+  // Given to us by the Game Engine Server
+  late Uint8List _aesKey;
+  late Uint8List _aesIV;
+
+  bool aesValuesSet = false;
 
   EncryptionService() {
-    ourKeyPair = _generateRSAkeyPair(_createSecureRandom());
+    random = _createSecureRandom();
+    ourKeyPair = _generateRSAkeyPair(random);
   }
 
-  void setAESKey(String key) {
-    aesKey = key;
+  void setAESValues(Uint8List key, Uint8List vI) {
+    _aesKey = key;
+    _aesIV = vI;
+    aesValuesSet = true;
   }
 
   Uint8List encryptAESMessage(String message) {
     Uint8List intListUnencrypted = convertStringToUint8List(message);
+    // Check if the message fills 128 bits yet
+    if (intListUnencrypted.length < 16) {
+      intListUnencrypted = _addPadding(intListUnencrypted, 16);
+    } else if (intListUnencrypted.length > 16) {
+      // ... TO BE IMPLEMENTED YUP
+      Exception('Message too long to send!:\n$message');
+    }
 
-    return _aesDecrypt(aesKey, intListUnencrypted);
+    Uint8List encryptedMessage = _aesEncrypt(intListUnencrypted);
+
+    return encryptedMessage;
   }
 
   String decryptAESMessage(Uint8List message) {
+    // .. perhaps I first need to cut the message into 128-bit-sized bites for the AES encryption.
+
     // First we decrypt the message
-    Uint8List intListDecrypted = _aesDecrypt(aesKey, message);
+    Uint8List intListDecrypted = _aesDecrypt(message);
+    // Second we cut out all that padding
+    intListDecrypted = _cutPadding(intListDecrypted);
+
     // Then we return the converted String message
     return convertUint8ListToString(intListDecrypted);
   }
@@ -51,8 +76,6 @@ class EncryptionService {
     // Then we return the converted String message
     return convertUint8ListToString(intListDecrypted);
   }
-
-  // ############################      RSA KEY GENERATION FUNCTIONS      ####################################
 
   AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> _generateRSAkeyPair(
       SecureRandom secureRandom,
@@ -83,6 +106,29 @@ class EncryptionService {
     );
   }
 
+  // pads with PKCS7
+  Uint8List _addPadding(Uint8List listToPad, int padLength) {
+    int originalLength = listToPad.length;
+
+    // https://gist.github.com/proteye/e54eef1713e1fe9123d1eb04c0a5cf9b
+    var out = Uint8List(padLength)..setAll(0, listToPad);
+
+    // add padding
+    var padder = PKCS7Padding();
+    padder.init();
+    padder.addPadding(out, originalLength);
+    return out;
+  }
+
+  Uint8List _cutPadding(Uint8List listToCut) {
+    var padder = PKCS7Padding();
+    padder.init();
+    int padLength = padder.padCount(listToCut);
+    int newLength = listToCut.length - padLength;
+
+    return Uint8List(newLength)..setRange(0, newLength, listToCut);
+  }
+
   // SecureRandom is a cryptographical random number generator.
   SecureRandom _createSecureRandom() {
     // 'Fortuna' is a cryptographically-secured Pseudo-Random Number Generating formula (PRNG)
@@ -103,7 +149,7 @@ class EncryptionService {
     final encryptor = OAEPEncoding(RSAEngine())
       ..init(true, PublicKeyParameter<RSAPublicKey>(theirPublicKey));
 
-    return _blockProcessor(encryptor, dataToEncrypt);
+    return _rsaBlockProcessor(encryptor, dataToEncrypt);
   }
 
   // Uses Our private key to decrypt the message that the sender encrypted for us using our Public Key.
@@ -111,11 +157,11 @@ class EncryptionService {
     final decryptor = OAEPEncoding(RSAEngine())
       ..init(false, PrivateKeyParameter<RSAPrivateKey>(ourPrivateKey));
 
-    return _blockProcessor(decryptor, dataToDecrypt);
+    return _rsaBlockProcessor(decryptor, dataToDecrypt);
   }
 
   // Processes blocks of data using the block cipher engine, be it encrypting or decrypting per the engine's settings.
-  Uint8List _blockProcessor(AsymmetricBlockCipher engine, Uint8List input) {
+  Uint8List _rsaBlockProcessor(AsymmetricBlockCipher engine, Uint8List input) {
     // Here we find out how many blocks we need to divide the input into.
     // We need to operate with whole numbers, so therefore we use Truncated Integer Division (~/)
     // It rounds the result towards zero (down). To account for the probable leftover decimals worth of data,
@@ -127,7 +173,7 @@ class EncryptionService {
     int inputOffset = 0;
     int outputOffset = 0;
 
-    // This while loop does all the math and stuff involved with processing and transferring the input to the output.
+    // This while loop does all the math and stuff involved with packing and encrypting the input to the output.
     while (inputOffset < input.length) {
       int chunkSize = (inputOffset + engine.inputBlockSize <= input.length)
           ? engine.inputBlockSize
@@ -146,9 +192,39 @@ class EncryptionService {
   }
 
   // ############################      AES ENCRYPTION/DECRYPTION FUNCTIONS      ####################################
-  Uint8List _aesEncrypt(String aesKey, Uint8List message) {}
 
-  Uint8List _aesDecrypt(String aesKey, Uint8List message) {}
+  Uint8List _aesEncrypt(Uint8List paddedMessage) {
+    CBCBlockCipher cbc = CBCBlockCipher(AESEngine())
+      ..init(true, ParametersWithIV(KeyParameter(_aesKey), _aesIV));
+
+    Uint8List encryptedMessage = Uint8List(
+        paddedMessage.length); // Always 16 bytes with the padding, God-willing.
+
+    int offset = 0;
+
+    while (offset < paddedMessage.length) {
+      offset +=
+          cbc.processBlock(paddedMessage, offset, encryptedMessage, offset);
+    }
+
+    return encryptedMessage;
+  }
+
+  Uint8List _aesDecrypt(Uint8List message) {
+    CBCBlockCipher cbc = CBCBlockCipher(AESEngine())
+      ..init(false, ParametersWithIV(KeyParameter(_aesKey), _aesIV));
+
+    Uint8List paddedMessage = Uint8List(16);
+
+    int offset = 0;
+
+    while (offset < 16) {
+      offset += cbc.processBlock(message, offset, paddedMessage, offset);
+    }
+
+    return paddedMessage;
+  }
+
   // ############################      UIntList and String conversions      ####################################
   // https://coflutter.com/dart-flutter-how-to-convert-string-to-uint8list/
 
