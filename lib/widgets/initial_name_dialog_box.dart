@@ -18,11 +18,29 @@ class InitialNameDialogBox {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Enter your name:',
+                ' - MISSION DEBRIEF: - ',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
+              const Text(
+                '[ MONKEY EYES ONLY ]',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 150, 15, 15),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                'Albert! Something awful has happened! Our intelligence suggests that the flying spaghetti monster has infiltrated the grand poker tournament! The very one which decides whether there will be world peace! Further, it is cheating by masquerading as every contestant! To ensure World Peace, you must covertly defeat the flying spaghetti monster at poker! Please choose a cover name, so the flying spaghetti monster does not recognize you.',
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
               const SizedBox(
-                height: 10,
+                height: 6,
+              ),
+              const Text(
+                'Enter your cover name:',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               TextField(
                 onChanged: (value) => _result = value,

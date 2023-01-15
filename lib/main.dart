@@ -22,11 +22,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const String _title = 'Albert Saves The Poker Tournament\nGOTY Edition';
+    const String _title = 'Albert Saves The Poker Tournament\n- GOTY Edition -';
     return MaterialApp(
       title: _title,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
       ),
       home: const MyHomePage(title: _title),
     );
@@ -73,14 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[noNameNoGame()],
+        title: Center(
+          child: Text(
+            widget.title,
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
+      body: noNameNoGame(),
     );
   }
 }
