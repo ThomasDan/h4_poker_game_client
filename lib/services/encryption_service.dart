@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 import "package:pointycastle/export.dart";
@@ -37,22 +35,20 @@ class EncryptionService {
 
   Uint8List encryptAESMessage(String message) {
     Uint8List intListUnencrypted = convertStringToUint8List(message);
-    // Check if the message fills 128 bits yet
-    if (intListUnencrypted.length < 16) {
-      intListUnencrypted = _addPadding(intListUnencrypted, 16);
-    } else if (intListUnencrypted.length > 16) {
-      // ... TO BE IMPLEMENTED YUP
-      Exception('Message too long to send!:\n$message');
-    }
+
+    // Here we determine how much padding there should be, 1-16.
+    // Without any padding, the _cutPadding() gets very angry, because it can't count the padding.
+    int bytesRequiredToConsistOf128bitPackages =
+        16 - (intListUnencrypted.length % 16);
+
+    intListUnencrypted = _addPadding(intListUnencrypted,
+        intListUnencrypted.length + bytesRequiredToConsistOf128bitPackages);
 
     Uint8List encryptedMessage = _aesEncrypt(intListUnencrypted);
-
     return encryptedMessage;
   }
 
   String decryptAESMessage(Uint8List message) {
-    // .. perhaps I first need to cut the message into 128-bit-sized bites for the AES encryption.
-
     // First we decrypt the message
     Uint8List intListDecrypted = _aesDecrypt(message);
     // Second we cut out all that padding
@@ -197,8 +193,7 @@ class EncryptionService {
     CBCBlockCipher cbc = CBCBlockCipher(AESEngine())
       ..init(true, ParametersWithIV(KeyParameter(_aesKey), _aesIV));
 
-    Uint8List encryptedMessage = Uint8List(
-        paddedMessage.length); // Always 16 bytes with the padding, God-willing.
+    Uint8List encryptedMessage = Uint8List(paddedMessage.length);
 
     int offset = 0;
 
@@ -214,11 +209,12 @@ class EncryptionService {
     CBCBlockCipher cbc = CBCBlockCipher(AESEngine())
       ..init(false, ParametersWithIV(KeyParameter(_aesKey), _aesIV));
 
-    Uint8List paddedMessage = Uint8List(16);
+    int storedLength = message.length;
+    Uint8List paddedMessage = Uint8List(storedLength);
 
     int offset = 0;
 
-    while (offset < 16) {
+    while (offset < storedLength) {
       offset += cbc.processBlock(message, offset, paddedMessage, offset);
     }
 

@@ -53,7 +53,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget noNameNoGame() {
-    return name == '' ? const Text('Awaiting name...') : Game(name);
+    return name == ''
+        ? const Center(
+            child: Text('Awaiting name...'),
+          )
+        : Game(name);
   }
 
   @override

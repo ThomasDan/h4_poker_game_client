@@ -17,6 +17,6 @@ class PlayingCard {
   // If it is a known card, this is its image
   // If it is an unknown card, this is its backside
   String imageFilePath() {
-    return '../sources/images/cards/${suit != null && value != null ? '${value}_of_$suit.png' : 'card_backside.png'}';
+    return './assets/images/cards/${suit != null && value != null ? '${value}_of_$suit.png' : 'card_backside.png'}';
   }
 }

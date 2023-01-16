@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:h4_poker_game_client/widgets/player_widget.dart';
+import 'package:h4_poker_game_client/widgets/player_controls.dart';
+import 'package:h4_poker_game_client/widgets/player_seat_widget.dart';
+import 'package:h4_poker_game_client/widgets/playing_card_widget.dart';
+import 'package:h4_poker_game_client/widgets/raise_dialog_box.dart';
 
 import '../models/player.dart';
 import '../models/playing_card.dart';
@@ -22,6 +25,26 @@ class _GameTableState extends State<GameTable> {
   List<Player> players = [];
   List<PlayingCard> cards = [];
   int bananasInPool = 0;
+  late RaiseDialogBox raiseDialogBox;
+
+  Row cardsPrinted() {
+    List<Widget> rowCards = [];
+
+    for (int i = 0; i < cards.length; i++) {
+      rowCards.add(PlayingCardWidget(cards[i]));
+    }
+
+    return Row(
+      children: rowCards,
+    );
+  }
+
+  void raise(int raiseValue) {
+    // do raising
+    setState(() {
+      bananasInPool += raiseValue;
+    });
+  }
 
   @override
   void initState() {
@@ -29,75 +52,84 @@ class _GameTableState extends State<GameTable> {
     players = widget.players;
     cards = widget.cards;
     bananasInPool = widget.bananasInPool;
+    raiseDialogBox = RaiseDialogBox(raise);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      //mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          // Spot for player 0 and 1
-          children: [
-            players[0] != null ? PlayerWidget(players[0]) : Text('Open Seat'),
-            players[1] != null ? PlayerWidget(players[1]) : Text('Open Seat'),
-          ],
-        ),
-        Row(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              // THe "center" column for Left players (2, 4, 6), Center Table, and Right Players (3, 5, 7)
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // Left (Player 2, 4 and 6)
-                  children: [
-                    players[2] != null
-                        ? PlayerWidget(players[2])
-                        : Text('Open Seat'),
-                    players[4] != null
-                        ? PlayerWidget(players[4])
-                        : Text('Open Seat'),
-                    players[6] != null
-                        ? PlayerWidget(players[6])
-                        : Text('Open Seat'),
-                  ],
-                ),
-                Column(
+    return Container(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height / 2,
+        minWidth: MediaQuery.of(context).size.width - 5,
+        maxWidth: MediaQuery.of(context).size.width,
+      ),
+      color: const Color.fromARGB(255, 15, 120, 15),
+      child: Column(
+        children: <Widget>[
+          const Padding(padding: EdgeInsets.only(top: 10)),
+          Row(
+            // Spot for player 0 and 1
+            mainAxisAlignment: MainAxisAlignment.center,
+
+            children: [
+              PlayerSeatWidget(players[0], false),
+              const SizedBox(width: 60),
+              PlayerSeatWidget(players[1], false),
+            ],
+          ),
+          Row(
+            // THe "center" row for Left players (2, 4, 6), Center Table, and Right Players (3, 5, 7)
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // Left (Player 2, 4 and 6)
+                children: [
+                  PlayerSeatWidget(players[2], true),
+                  const SizedBox(height: 35),
+                  PlayerSeatWidget(players[4], true),
+                  const SizedBox(height: 35),
+                  PlayerSeatWidget(players[6], true),
+                ],
+              ),
+              DragTarget<int>(
+                builder: (context, _, __) => Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   // Center (Table, shared)
                   children: [
-                    Text('$bananasInPool Bananas'),
+                    Text(
+                        '$bananasInPool ${bananasInPool <= 20 ? '🍌' : bananasInPool <= 50 ? '🍌🍌' : '🍌🍌🍌'}'),
+                    cardsPrinted(),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  // Right (Player 3, 5 and 7)
-                  children: [
-                    players[3] != null
-                        ? PlayerWidget(players[3])
-                        : Text('Open Seat'),
-                    players[5] != null
-                        ? PlayerWidget(players[5])
-                        : Text('Open Seat'),
-                    players[7] != null
-                        ? PlayerWidget(players[7])
-                        : Text('Open Seat'),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Row(
-          // Spot for You
-          children: [],
-        ),
-      ],
+                onAccept: (_) => setState(() =>
+                    raiseDialogBox.openRaiseDialog(10, you.bananas, context)),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                // Right (Player 3, 5 and 7)
+                children: [
+                  PlayerSeatWidget(players[3], true),
+                  const SizedBox(height: 35),
+                  PlayerSeatWidget(players[5], true),
+                  const SizedBox(height: 35),
+                  PlayerSeatWidget(players[7], true),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            // Spot for You
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: PlayerControls(you),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

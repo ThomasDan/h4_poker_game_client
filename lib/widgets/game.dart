@@ -18,11 +18,16 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   late CommunicationManager cm;
   late Player player;
+  late List<Player> players;
+  late int bananasInPool;
+  late List<PlayingCard> cards;
 
   @override
   // initState() is the very first thing that is run.
   void initState() {
     player = Player(widget.name);
+    player.bananas = 100;
+    player.id = '39449';
     // super.initState() ensures that the standard initialization procedures are still run, so this is not a total @override
     super.initState();
     // https://www.flutterbeads.com/call-method-after-build-in-flutter/
@@ -41,25 +46,66 @@ class _GameState extends State<Game> {
   @override
   Widget build(BuildContext context) {
     return GameTable(
-        player,
-        [
-          player,
-          player,
-          player,
-          player,
-          player,
-          player,
-          player,
-          player,
-        ],
-        [
+      player
+        ..hand = [
           PlayingCard()
-            ..suit = 'spades'
-            ..value = 'ace',
+            ..suit = 'clubs'
+            ..value = '8',
           PlayingCard()
-            ..suit = 'spades'
-            ..value = 'ace',
+            ..suit = 'diamonds'
+            ..value = 'king'
         ],
-        200);
+      [
+        Player('TOmmy')
+          ..bananas = 10
+          ..hand = [
+            PlayingCard()
+              ..suit = 'hearts'
+              ..value = 'king',
+            PlayingCard()
+              ..suit = 'hearts'
+              ..value = 'queen',
+          ]
+          ..id = '1231',
+        Player('Jonny')
+          ..bananas = 34
+          ..id = '1337'
+          ..hand = [
+            PlayingCard(),
+            PlayingCard(),
+          ],
+        Player('Jimmy')
+          ..bananas = 5555
+          ..id = '100'
+          ..hand = [
+            PlayingCard()
+              ..suit = 'clubs'
+              ..value = 'jack',
+          ],
+        Player(null),
+        Player(null),
+        Player(null),
+        Player(null),
+        Player('Kimmy')
+          ..bananas = 69
+          ..id = '12314',
+      ],
+      [
+        PlayingCard()
+          ..suit = 'spades'
+          ..value = 'ace',
+        PlayingCard()
+          ..suit = 'spades'
+          ..value = 'ace',
+        PlayingCard()
+          ..suit = 'spades'
+          ..value = 'ace',
+        PlayingCard()
+          ..suit = 'spades'
+          ..value = 'ace',
+        PlayingCard(),
+      ],
+      200,
+    );
   }
 }

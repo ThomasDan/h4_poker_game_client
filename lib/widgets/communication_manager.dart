@@ -20,6 +20,9 @@ class CommunicationManager {
       '{"type":"encrypt", "rsaPublicKey":${encryptServ.ourKeyPair.publicKey}}',
     );
     */
+
+    // testAES();
+    // testRSA();
   }
 
   void testAES() {
@@ -28,7 +31,8 @@ class CommunicationManager {
     Uint8List aesVI = es1.random.nextBytes(16);
     es1.setAESValues(aesKey, aesVI);
 
-    String message = "KONICHIWA";
+    String message =
+        "KONICHIWA! I SPEAKU THE MOONORUNEE! I AMMA JEAPONEESE! lermaksrnaskeoaraotajnejoenr, okay?";
     print('Message, unpadded and unencrypted:\n$message');
     Uint8List encryptedMessage = es1.encryptAESMessage(message);
 
@@ -49,12 +53,14 @@ class CommunicationManager {
 
     // ES1 encrypts a message for ES2
     Uint8List messageForES2 = es1.encryptRSAMessage(
-        'Hello? This is ES1. Do you understand this message, ES2? ÆØÅ ä Â øæå');
+        'Hello? This is ES1. Do you understand this message, ES2?');
     print(
         'Message from ES1 to ES2, encrypted by ES1 (first 3 elements):\n${messageForES2.sublist(0, 3).toString()}');
     // ES2 decrypts a message from ES1
     String messageFromES1 = es2.decryptRSAMessage(messageForES2);
     print('Message from ES1 to ES2, decrypted by ES2:\n$messageFromES1');
+
+    print("------------- THIS CONCLUDES THE TEST OF RSA -----------------");
   }
 
   void incomingMessage(String message) {
