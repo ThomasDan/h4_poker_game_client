@@ -76,7 +76,6 @@ class _GameTableState extends State<GameTable> {
           Row(
             // Spot for player 0 and 1
             mainAxisAlignment: MainAxisAlignment.center,
-
             children: [
               PlayerSeatWidget(players[0], false),
               const SizedBox(width: 60),
@@ -104,7 +103,7 @@ class _GameTableState extends State<GameTable> {
                   // Center (Table, shared)
                   children: [
                     Text(
-                        '$bananasInPool ${bananasInPool <= 20 ? '🍌' : bananasInPool <= 50 ? '🍌🍌' : '🍌🍌🍌'}'),
+                        '$bananasInPool ${bananasInPool <= 50 ? '🍌' : bananasInPool <= 100 ? '🍌🍌' : '🍌🍌🍌'}'),
                     cardsPrinted(),
                   ],
                 ),
