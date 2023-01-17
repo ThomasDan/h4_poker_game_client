@@ -103,11 +103,11 @@ class EncryptionService {
   }
 
   // pads with PKCS7
-  Uint8List _addPadding(Uint8List listToPad, int padLength) {
+  Uint8List _addPadding(Uint8List listToPad, int paddedLength) {
     int originalLength = listToPad.length;
 
     // https://gist.github.com/proteye/e54eef1713e1fe9123d1eb04c0a5cf9b
-    var out = Uint8List(padLength)..setAll(0, listToPad);
+    var out = Uint8List(paddedLength)..setAll(0, listToPad);
 
     // add padding
     var padder = PKCS7Padding();

@@ -69,14 +69,11 @@ class CommunicationManager {
       String decryptedMessage =
           encryptServ.decryptRSAMessage(message as Uint8List);
       Map<String, dynamic> messageMapped = jsonDecode(decryptedMessage);
-      if (messageMapped.containsKey('aesKey') &&
-          messageMapped.containsKey('aesIV')) {
+      if (messageMapped['type'] == 'aesValues') {
         encryptServ.setAESValues(
           messageMapped['aesKey'],
           messageMapped['aesIV'],
         );
-      } else {
-        print('.. This does not contain both AES values:\n$message');
       }
     } else {
       try {

@@ -25,7 +25,7 @@ class _PlayerSeatWidget extends State<PlayerSeatWidget> {
   Widget playerSeated() {
     List<Widget> cards = [];
     for (int i = 0; i < player.hand.length; i++) {
-      cards.add(PlayingCardWidget(player.hand[i]));
+      cards.add(PlayingCardWidget(player.hand[i], false));
     }
     if (placeCardsBelow) {
       return Column(

@@ -3,6 +3,7 @@ import 'package:h4_poker_game_client/widgets/player_controls.dart';
 import 'package:h4_poker_game_client/widgets/player_seat_widget.dart';
 import 'package:h4_poker_game_client/widgets/playing_card_widget.dart';
 import 'package:h4_poker_game_client/widgets/raise_dialog_box.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../models/player.dart';
 import '../models/playing_card.dart';
@@ -12,8 +13,10 @@ class GameTable extends StatefulWidget {
   final List<Player> players;
   final List<PlayingCard> cards;
   final int bananasInPool;
+  final ScreenshotController controller;
 
-  GameTable(this.player, this.players, this.cards, this.bananasInPool,
+  const GameTable(this.player, this.players, this.cards, this.bananasInPool,
+      this.controller,
       {super.key});
 
   @override
@@ -25,13 +28,14 @@ class _GameTableState extends State<GameTable> {
   List<Player> players = [];
   List<PlayingCard> cards = [];
   int bananasInPool = 0;
+  late ScreenshotController controller;
   late RaiseDialogBox raiseDialogBox;
 
   Row cardsPrinted() {
     List<Widget> rowCards = [];
 
     for (int i = 0; i < cards.length; i++) {
-      rowCards.add(PlayingCardWidget(cards[i]));
+      rowCards.add(PlayingCardWidget(cards[i], true));
     }
 
     return Row(
@@ -52,6 +56,7 @@ class _GameTableState extends State<GameTable> {
     players = widget.players;
     cards = widget.cards;
     bananasInPool = widget.bananasInPool;
+    controller = widget.controller;
     raiseDialogBox = RaiseDialogBox(raise);
     super.initState();
   }
@@ -124,7 +129,7 @@ class _GameTableState extends State<GameTable> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                child: PlayerControls(you),
+                child: PlayerControls(you, controller),
               ),
             ],
           ),

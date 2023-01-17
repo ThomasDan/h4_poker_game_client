@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../models/player.dart';
 import '../models/playing_card.dart';
@@ -21,6 +22,8 @@ class _GameState extends State<Game> {
   late List<Player> players;
   late int bananasInPool;
   late List<PlayingCard> cards;
+
+  final controller = ScreenshotController();
 
   @override
   // initState() is the very first thing that is run.
@@ -45,67 +48,76 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    return GameTable(
-      player
-        ..hand = [
-          PlayingCard()
-            ..suit = 'clubs'
-            ..value = '8',
-          PlayingCard()
-            ..suit = 'diamonds'
-            ..value = 'king'
-        ],
-      [
-        Player('TOmmy')
-          ..bananas = 10
-          ..hand = [
-            PlayingCard()
-              ..suit = 'hearts'
-              ..value = 'king',
-            PlayingCard()
-              ..suit = 'hearts'
-              ..value = 'queen',
-          ]
-          ..id = '1231',
-        Player('Jonny')
-          ..bananas = 34
-          ..id = '1337'
-          ..hand = [
-            PlayingCard(),
-            PlayingCard(),
-          ],
-        Player('Jimmy')
-          ..bananas = 5555
-          ..id = '100'
+    return Screenshot(
+      controller: controller,
+      child: GameTable(
+        player
           ..hand = [
             PlayingCard()
               ..suit = 'clubs'
-              ..value = 'jack',
+              ..value = '8',
+            PlayingCard()
+              ..suit = 'diamonds'
+              ..value = 'king'
           ],
-        Player(null),
-        Player(null),
-        Player(null),
-        Player(null),
-        Player('Kimmy')
-          ..bananas = 69
-          ..id = '12314',
-      ],
-      [
-        PlayingCard()
-          ..suit = 'spades'
-          ..value = 'ace',
-        PlayingCard()
-          ..suit = 'spades'
-          ..value = 'ace',
-        PlayingCard()
-          ..suit = 'spades'
-          ..value = 'ace',
-        PlayingCard()
-          ..suit = 'spades'
-          ..value = 'ace',
-        PlayingCard(),
-      ],
-      200,
+        [
+          Player('TOmmy')
+            ..bananas = 10
+            ..hand = [
+              PlayingCard()
+                ..suit = 'hearts'
+                ..value = 'king',
+              PlayingCard()
+                ..suit = 'hearts'
+                ..value = 'queen',
+            ]
+            ..id = '1231',
+          Player('Jonny')
+            ..bananas = 34
+            ..id = '1337'
+            ..hand = [
+              PlayingCard(),
+              PlayingCard(),
+            ],
+          Player('Jimmy')
+            ..bananas = 5555
+            ..id = '100'
+            ..hand = [
+              PlayingCard()
+                ..suit = 'clubs'
+                ..value = 'jack',
+              PlayingCard(),
+            ],
+          player,
+          player,
+          player,
+          player,
+          Player('Kimmy')
+            ..bananas = 69
+            ..id = '12314'
+            ..hand = [
+              PlayingCard(),
+              PlayingCard(),
+            ],
+        ],
+        [
+          PlayingCard()
+            ..suit = 'spades'
+            ..value = 'ace',
+          PlayingCard()
+            ..suit = 'spades'
+            ..value = 'ace',
+          PlayingCard()
+            ..suit = 'spades'
+            ..value = 'ace',
+          PlayingCard()
+            ..suit = 'spades'
+            ..value = 'ace',
+          PlayingCard(),
+        ],
+        200,
+        controller,
+      ),
     );
   }
 }
