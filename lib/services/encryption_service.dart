@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:pointycastle/src/platform_check/platform_check.dart';
+
+import 'dart:convert';
 import "package:pointycastle/export.dart";
+import 'package:asn1lib/asn1lib.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/src/platform_check/platform_check.dart';
 
 // https://pub.dev/packages/pointycastle
 // RSA:
@@ -71,6 +75,37 @@ class EncryptionService {
     Uint8List intListDecrypted = _rsaDecrypt(ourKeyPair.privateKey, message);
     // Then we return the converted String message
     return convertUint8ListToString(intListDecrypted);
+  }
+
+  // FULL DISCLORE: I pretty much 1:1 copied this code from below github link. I do NOT have the time to get into ASN1 or PEM.
+  // This exists purely for demonstration purposes.
+  String getPublicKeyAsPEM() {
+    // https://stackoverflow.com/a/65853242
+    // - And more specifically https://gist.github.com/proteye/982d9991922276ccfb011dfc55443d74
+    var algorithmSequence = ASN1Sequence();
+
+    // I assume it's some kind of formatting for ASN1.
+    var algorithmAsn1Obj = ASN1Object.fromBytes(Uint8List.fromList(
+        [0x6, 0x9, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0xd, 0x1, 0x1, 0x1]));
+    var paramsAsn1Obj = ASN1Object.fromBytes(Uint8List.fromList([0x5, 0x0]));
+    algorithmSequence.add(algorithmAsn1Obj);
+    algorithmSequence.add(paramsAsn1Obj);
+
+    var publicKeySequence = ASN1Sequence();
+    publicKeySequence.add(ASN1Integer(ourKeyPair.publicKey.modulus!));
+    publicKeySequence.add(ASN1Integer(ourKeyPair.publicKey.exponent!));
+    var publicKeySeqBitString =
+        ASN1BitString(Uint8List.fromList(publicKeySequence.encodedBytes));
+
+    var topLevelSequence = ASN1Sequence();
+    topLevelSequence.add(algorithmSequence);
+    topLevelSequence.add(publicKeySeqBitString);
+    var base64EncodedPK = base64.encode(topLevelSequence.encodedBytes);
+
+    String output =
+        """-----BEGIN PUBLIC KEY-----\r\n$base64EncodedPK\r\n-----END PUBLIC KEY-----""";
+    print(output);
+    return output;
   }
 
   AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> _generateRSAkeyPair(

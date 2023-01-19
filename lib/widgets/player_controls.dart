@@ -10,13 +10,15 @@ import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 
 import './player_seat_widget.dart';
+import '../models/player_action_methods.dart';
 import '../models/player.dart';
 
 class PlayerControls extends StatelessWidget {
   Player player;
+  PlayerActionMethods actionMethods;
   ScreenshotController controller;
 
-  PlayerControls(this.player, this.controller, {super.key});
+  PlayerControls(this.player, this.actionMethods, this.controller, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +84,7 @@ class PlayerControls extends StatelessWidget {
         Row(
           children: [
             PlayerSeatWidget(player, true),
+            // Dragable has an unused datatype int and data of 0, and that's because DragTarget and Dragable will cause an exception if there's no data.
             Draggable<int>(
               data: 0,
               feedback: ConstrainedBox(
@@ -105,21 +108,21 @@ class PlayerControls extends StatelessWidget {
           // Control buttons
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => actionMethods.checkOrCall,
               child: const Text('Check/Call'),
             ),
             const SizedBox(
               width: 3,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => actionMethods.allIn,
               child: const Text('All-In'),
             ),
             const SizedBox(
               width: 3,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => actionMethods.fold,
               child: const Text(
                 'Fold',
                 style: TextStyle(color: Color.fromARGB(255, 200, 8, 8)),

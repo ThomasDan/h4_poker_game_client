@@ -51,8 +51,9 @@ dependencies:
   permission_handler: ^8.1.1
   # used for image resizing
   image: ^4.0.10
-
-  # Allows the app to connect to web things, like APIs
+  # used as a component for turning my RSA public key into a PEM
+  asn1lib: ^1.4.0
+  # Allows the app to connect to web things, like the API I use for email service.
   http: ^0.13.5
 
 dev_dependencies:

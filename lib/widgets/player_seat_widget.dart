@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:h4_poker_game_client/widgets/playing_card_widget.dart';
 
-import '../models/playing_card.dart';
 import '../models/player.dart';
 
 class PlayerSeatWidget extends StatefulWidget {
   final Player player;
   final bool placeCardsBelow;
 
-  PlayerSeatWidget(this.player, this.placeCardsBelow, {super.key});
+  const PlayerSeatWidget(this.player, this.placeCardsBelow, {super.key});
 
   @override
   State<PlayerSeatWidget> createState() => _PlayerSeatWidget();
@@ -30,14 +29,20 @@ class _PlayerSeatWidget extends State<PlayerSeatWidget> {
     if (placeCardsBelow) {
       return Column(
         children: [
-          Text('${player.name}\n${player.bananas.toString()}🍌'),
+          Text(
+            '${player.name}\n${player.bananas.toString()}🍌',
+            style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
           Row(children: cards),
         ],
       );
     } else {
       return Row(
         children: [
-          Text('${player.name}\n${player.bananas.toString()}🍌'),
+          Text(
+            '${player.name}\n${player.bananas.toString()}🍌',
+            style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
           Row(children: cards),
         ],
       );
